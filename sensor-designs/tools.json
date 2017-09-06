@@ -1,0 +1,37 @@
+{
+  "1": {
+    "units": "MM",
+    "shape": "CYLINDRICAL",
+    "length": 1.2192,
+    "diameter": 0.4064,
+    "description": "Microcut USA 82016"
+  },
+  "2": {
+    "units": "MM",
+    "shape": "CYLINDRICAL",
+    "length": 0.6096,
+    "diameter": 0.2032,
+    "description": "Microcut USA 82008"
+  },
+  "3": {
+    "units": "MM",
+    "shape": "CYLINDRICAL",
+    "length": 0.3048,
+    "diameter": 0.1016,
+    "description": "Microcut USA 82004"
+  },
+  "4": {
+    "units": "MM",
+    "shape": "CYLINDRICAL",
+    "length": 0.1524,
+    "diameter": 0.0508,
+    "description": "Microcut USA 82002"
+  },
+  "5": {
+    "units": "MM",
+    "shape": "CYLINDRICAL",
+    "length": 3.175,
+    "diameter": 0.381,
+    "description": "Microcut USA 72015"
+  }
+}

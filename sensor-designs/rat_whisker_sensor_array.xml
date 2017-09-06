@@ -1,0 +1,35 @@
+<camotics>
+  <!-- Note, all values are in mm regardless of 'units' option. -->
+  <!-- NC Files -->
+  <nc-files>
+    rat_whisker_sensor_array.tpl
+  </nc-files>
+
+  <!-- Renderer -->
+  <resolution v='0.086506'/>
+  <resolution-mode v='VERY_HIGH'/>
+
+  <!-- Workpiece -->
+  <automatic-workpiece v='true'/>
+  <workpiece-margin v='1'/>
+  <workpiece-max v='(52.3294,12.2725,0)'/>
+  <workpiece-min v='(-23.0292,-12.0286,-3.5349)'/>
+
+  <tool_table>
+    <tool length='1.2192' number='1' radius='0.2032' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82016
+    </tool>
+    <tool length='0.6096' number='2' radius='0.1016' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82008
+    </tool>
+    <tool length='0.3048' number='3' radius='0.0508' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82004
+    </tool>
+    <tool length='0.1524' number='4' radius='0.0254' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82002
+    </tool>
+    <tool length='3.175' number='5' radius='0.1905' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 72015
+    </tool>
+  </tool_table>
+</camotics>

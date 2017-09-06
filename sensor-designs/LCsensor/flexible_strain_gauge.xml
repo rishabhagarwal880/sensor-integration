@@ -1,0 +1,32 @@
+<camotics>
+  <!-- Note, all values are in mm regardless of 'units' option. -->
+  <!-- NC Files -->
+  <nc-files>
+    flexible_strain_gauge.tpl
+  </nc-files>
+
+  <!-- Renderer -->
+  <resolution v='0.028162'/>
+  <resolution-mode v='VERY_HIGH'/>
+
+  <!-- Workpiece -->
+  <automatic-workpiece v='true'/>
+  <workpiece-margin v='1'/>
+  <workpiece-max v='(11.0142,4.05435,0)'/>
+  <workpiece-min v='(-8.29076,-1.15255,-2.2219)'/>
+
+  <tool_table>
+    <tool length='1.2192' number='1' radius='0.2032' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82016
+    </tool>
+    <tool length='0.6096' number='2' radius='0.1016' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82008
+    </tool>
+    <tool length='0.3048' number='3' radius='0.0508' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82004
+    </tool>
+    <tool length='0.1524' number='4' radius='0.0254' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82002
+    </tool>
+  </tool_table>
+</camotics>

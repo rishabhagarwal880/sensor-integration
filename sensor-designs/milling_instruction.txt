@@ -1,0 +1,50 @@
+>> Export .tpl to gcode 
+
+>> Open gcode via notepad++ and then change digits
+G0 => G00, G1 => G01 
+Also remove the space: G0 Z0.5001 => G00Z0.5001
+
+>> Codes
+G90: absolute
+G91: relative
+G21: Metric
+G54: Specified COORS
+
+e.g.) F7.01S1000M03
+F7.01: Feed rate
+S1000: rpm
+
+Add headers and footers 
+% means start and finish the job
+
+>>If there are math expressions in the tpl
+1)Add spacing to X, Y, and Z
+2)Import .txt file into excel (DATA - From Text)
+3)Select columns including COORS values
+4)Right click and select "Format cells" and change numbers four decimals
+5)Open via notepad++ and then remove all spaces
+
+>> Header
+%
+
+G90
+ (Absolute distance mode)
+G21 (Unit: millimeter)
+G54 (Work offset
+G00Z0.5001
+
+F6S12000M03
+
+
+>> Footer
+M05
+
+M02
+
+%
+
+>>Milling
+1) Turn on the machine
+2) Open MDX-540
+3) Rotate 375.75 degree
+

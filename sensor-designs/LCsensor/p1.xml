@@ -1,0 +1,20 @@
+<camotics>
+  <!-- Note, all values are in mm regardless of 'units' option. -->
+  <!-- NC Files -->
+  <nc-files>
+    p1.tpl
+  </nc-files>
+
+  <!-- Renderer -->
+  <resolution v='0.121999'/>
+
+  <!-- Workpiece -->
+  <automatic-workpiece v='true'/>
+  <workpiece-margin v='1'/>
+  <workpiece-max v='(12.12,12.12,0)'/>
+  <workpiece-min v='(-0.12,-0.12,-3.03)'/>
+
+  <tool_table>
+    <tool length='10' number='1' radius='1' shape='CYLINDRICAL' units='MM'/>
+  </tool_table>
+</camotics>
