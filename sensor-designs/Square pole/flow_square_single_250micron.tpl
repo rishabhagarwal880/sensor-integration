@@ -9,7 +9,7 @@ r_tool = tool_change(1);
 
 // 1) Sensor features geometry
 var gap_1 = 0.025; // (mm)
-var gap_2 = 0.030; // (mm)
+var gap_2 = 0.025; // (mm)
 var gap_3 = 0.035; // (mm)
 
 var length = 0.4; // (mm) mid pad length
@@ -163,7 +163,7 @@ function tracesp(gap,depth, h_safe,type) {
 irapid({y:length/2+gap+2*r_tool});
  icut({z: -h_safe-depth});
  icut({y:5});
-icut({x:20});
+icut({x:30});
 cpad(1.5);
 rapid({z:h_safe});
 
@@ -171,14 +171,14 @@ rapid({z:h_safe});
 irapid({y:-5-length/2-gap-2*r_tool});
  icut({z: -h_safe-depth});
  cpad(1.5);
- icut({x: -20+length/2+gap+2*r_tool});
+ icut({x: -30+length/2+gap+2*r_tool});
 rapid({z:h_safe});
 
 //pad 3
 irapid({x:-length/2-gap-2*r_tool,y:-length/2-gap-2*r_tool});
  icut({z: -h_safe-depth});
  icut({y:-5});
-icut({x:20});
+icut({x:30});
 cpad(1.5);
 rapid({z:h_safe});
 }
@@ -189,7 +189,7 @@ function tracemp(gap,depth, h_safe,type) {
 //pad 1
 irapid({x:-length/2});
  icut({z: -h_safe-depth});
- icut({x:-20});
+ icut({x:-30});
 cpad(1.5);
 rapid({z:h_safe});
 
