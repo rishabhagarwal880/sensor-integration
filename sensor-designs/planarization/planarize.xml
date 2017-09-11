@@ -1,0 +1,31 @@
+<camotics>
+  <!-- Note, all values are in mm regardless of 'units' option. -->
+  <!-- NC Files -->
+  <nc-files>
+    planarize.tpl
+  </nc-files>
+
+  <!-- Renderer -->
+  <resolution v='0.405452'/>
+
+  <!-- Workpiece -->
+  <automatic-workpiece v='true'/>
+  <workpiece-max v='(41.9926,41.9926,0)'/>
+  <workpiece-min v='(-41.9924,-41.9924,-2.3624)'/>
+
+  <tool_table>
+    <tool length='1.2192' number='1' radius='0.2032' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82016
+    </tool>
+    <tool length='0.6096' number='2' radius='0.1016' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82008
+    </tool>
+    <tool length='0.3048' number='3' radius='0.0508' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82004
+    </tool>
+    <tool length='0.1524' number='4' radius='0.0254' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82002
+    </tool>
+    <tool length='76.2' number='5' radius='3.175' shape='CYLINDRICAL' units='MM'/>
+  </tool_table>
+</camotics>
