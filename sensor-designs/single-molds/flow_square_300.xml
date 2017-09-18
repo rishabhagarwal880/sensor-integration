@@ -6,13 +6,13 @@
   </nc-files>
 
   <!-- Renderer -->
-  <resolution v='0.288743'/>
+  <resolution v='0.220348'/>
 
   <!-- Workpiece -->
   <automatic-workpiece v='true'/>
-  <workpiece-margin v='17'/>
-  <workpiece-max v='(41.5114,8.83016,0)'/>
-  <workpiece-min v='(-41.7112,-8.82996,-4.09488)'/>
+  <workpiece-margin v='7'/>
+  <workpiece-max v='(35.3007,7.51224,0)'/>
+  <workpiece-min v='(-35.5005,-7.51204,-2.51439)'/>
 
   <tool_table>
     <tool length='1.2192' number='1' radius='0.2032' shape='CYLINDRICAL' units='MM'>

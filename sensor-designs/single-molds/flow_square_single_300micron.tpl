@@ -5,13 +5,13 @@ r_tool = tool_change(1);
 
 // 1) Sensor features geometry
 var gap_1 = 0.025; // (mm)
-var gap_2 = 0.030; // (mm)
+var gap_2 = 0.035; // (mm)
 var gap_3 = 0.035; // (mm)
 
 var length = 0.4; // (mm) mid pad length
 
-var depth_s =  0.15; //(mm) pad area
-var depth_p = 1.5; // post
+var depth_s =  0.10; //(mm) pad area
+var depth_p = 0.35; // post
 
 // 3) set initial mill parameters
 var h_safe = 0.5; // safe height above workpiece (mm)

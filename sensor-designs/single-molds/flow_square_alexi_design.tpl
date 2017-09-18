@@ -12,7 +12,7 @@ var length = 0.4; // (mm) mid pad length
 
 var depth_s =  0.10; //(mm) pad area
 var depth_p = 0.350; // post
-var depth_t = 0.05; // post
+var depth_t = 0.10; // post
 
 // 3) set initial mill parameters
 var h_safe = 0.5; // safe height above workpiece (mm)
