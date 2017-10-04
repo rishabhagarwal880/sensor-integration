@@ -4,28 +4,23 @@ import baxter_interface
 
 from std_msgs.msg import String
 
-
+#class defined for gripper
 class Helper(object):
        
 	def __init__(self):
 
         	self._lgrip = baxter_interface.Gripper("left")
         	self._rgrip = baxter_interface.Gripper("right")
-
-
-
 #        DEFINE THE VARIABKE FROM THE MESSAGE
-		
         	self._command = "hsgx"
-       		self._rgrip.calibrate()
 
-
+#	update the command value
 	def callback(self, data):
 	    	rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
 		self._command = data.data
 		return
 
-    	
+	#check the value and take action
 	def check(self):
 	    
 		if self._command == "Negative":
@@ -34,9 +29,7 @@ class Helper(object):
 		        self._rgrip.open()
 
 	
-
-	
-		
+#create an instance for gripper
 def main():
 
 	rospy.init_node("gripper")
