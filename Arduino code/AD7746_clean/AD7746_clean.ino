@@ -3,6 +3,10 @@
 //AD7746 definitions
 #define I2C_ADDRESS  0x48 //0x90 shift one to the rigth
 
+#define WRITE_ADDRESS 0x90
+#define READ_ADDRESS 0x91
+#define RESET_ADDRESS 0xBF
+
 #define REGISTER_STATUS 0x00
 #define REGISTER_CAP_DATA 0x01
 #define REGISTER_VT_DATA 0x04
@@ -26,7 +30,7 @@ byte calibration;
 byte outOfRangeCount = 0;
 
 unsigned long offset = 0;
-
+unsigned long offsetting;
 void setup()
 {
 
@@ -44,7 +48,7 @@ void setup()
 
   writeRegister(REGISTER_EXC_SETUP, _BV(3) | _BV(1) | _BV(0)); // EXC source A
 
-  writeRegister(REGISTER_CAP_SETUP,_BV(7)); // cap setup reg - cap enabled
+  writeRegister(REGISTER_CAP_SETUP,_BV(7)| _BV(5)); // cap setup reg - cap enabled
 
   Serial.println("Getting offset");
   offset = ((unsigned long)readInteger(REGISTER_CAP_OFFSET)) << 8;  
@@ -61,7 +65,7 @@ void setup()
   offset = ((unsigned long)readInteger(REGISTER_CAP_OFFSET)) << 8;  
   Serial.println(offset);
 
-  writeRegister(REGISTER_CAP_SETUP,_BV(7)); // cap setup reg - cap enabled
+  writeRegister(REGISTER_CAP_SETUP,_BV(7)| _BV(5)); // cap setup reg - cap enabled
 
   writeRegister(REGISTER_EXC_SETUP, _BV(3)); // EXC source A
 
@@ -81,7 +85,7 @@ void loop() // main program begins
   if (Serial.available() > 0) {
     // read the incoming byte:
     Serial.read();
-    displayStatus();
+    displayStatus();  
 
   }
 
@@ -91,7 +95,9 @@ void loop() // main program begins
   Serial.print((int)calibration);
   Serial.print("/");
   Serial.println(value);
-  
+  unsigned long code;
+  code = (value-offset) * 2.44e-07-((int)calibration)*0.164;
+  Serial.println(code);
   if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
     outOfRangeCount++;
   }
@@ -106,6 +112,11 @@ void loop() // main program begins
   }
 
   delay(50);
+
+ // byte result =readRegister(REGISTER_CAP_DATA);
+ // Serial.println("result");
+ // Serial.println(result);
+
 }
 
 void calibrate (byte direction) {
@@ -144,8 +155,18 @@ long readValue() {
   unsigned long value =  readLong(REGISTER_CAP_DATA);
 
   value >>=8;
+  ret =value;
   //we have read one byte to much, now we have to get rid of it
-  ret =  value;
+  //byte result =readRegister(REGISTER_CAP_DATA);
+  //offsetting = readRegister(REGISTER_CONFIGURATION,1);
+  //Serial.println(offset);
+  //unsigned long code = readRegister(REGISTER_CAP_DATA);
+  //Serial.println(code);
+  //float capVal = 1000*(4.096*2.0*(code-offset))/(1.0 * 0xffffffUL)-4.096;
+  //value = 1000*(4.096*2.0*(code-offset))/(1.0 * 0xffffffUL)-4.096;
 
+  //String outString = String(int(1000*(4.096*2.0*(code-offsetting))/(1.0 * 0xffffffUL)-4.096)) + ",0";
+ // Serial.println(outString);
   return ret;
 }
+

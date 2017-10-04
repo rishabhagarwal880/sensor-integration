@@ -44,3 +44,4 @@ void displayStatus() {
   Serial.println(data[18],BIN);
   
 }
+
