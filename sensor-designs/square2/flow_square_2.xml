@@ -1,0 +1,35 @@
+<camotics>
+  <!-- Note, all values are in mm regardless of 'units' option. -->
+  <!-- NC Files -->
+  <nc-files>
+    flow_square_2.gcode
+  </nc-files>
+
+  <!-- Renderer -->
+  <resolution v='0.079815'/>
+  <resolution-mode v='VERY_HIGH'/>
+
+  <!-- Workpiece -->
+  <automatic-workpiece v='true'/>
+  <workpiece-max v='(22.1211,27.2721,0)'/>
+  <workpiece-min v='(-3.57092,-31.6305,-3.35989)'/>
+
+  <tool_table>
+    <tool length='1.2192' number='1' radius='0.2032' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82016
+    </tool>
+    <tool length='0.6096' number='2' radius='0.1016' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82008
+    </tool>
+    <tool length='0.3048' number='3' radius='0.0508' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82004
+    </tool>
+    <tool length='0.1524' number='4' radius='0.0254' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 82002
+    </tool>
+    <tool length='3.175' number='5' radius='0.1905' shape='CYLINDRICAL' units='MM'>
+      Microcut USA 72015
+    </tool>
+    <tool length='70' number='6' radius='3.175' shape='CYLINDRICAL' units='MM'/>
+  </tool_table>
+</camotics>
