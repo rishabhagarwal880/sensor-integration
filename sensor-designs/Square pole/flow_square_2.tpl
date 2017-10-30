@@ -28,7 +28,7 @@ speed(12000); // Set RPM in the clockwise direction
 // 4) milling shear sensor features
 
 var dev_1 = 0;
-var dev_2 = 15;
+var dev_2 = 20;
 
 // i) traces
 //bottom
@@ -47,7 +47,7 @@ tracesp(gap_3,depth_s, length,h_safe);
 rapid({x:dev_1,y:dev_2});
 tracemp(gap_3,depth_s, length,h_safe);
 
-r_tool = tool_change(2);
+r_tool = tool_change(5);
 
 // ii) Surrounding pads
 // bottom
@@ -114,7 +114,8 @@ rapid({z:h_safe});
 function surroundpad(gap, depth, length,h_safe) {
 // surrounding pads (clockwise from top)
 //pad 1
-irapid({x:-length/2,y:gap+2*r_tool+length/2});
+//irapid({x:-length/2,y:gap+2*r_tool+length/2});
+irapid({x:-length/2,y:gap+r_tool+0.1016+length/2});
  icut({z: -h_safe-depth});
  icut({x:length});
  icut({x:-length/2});
@@ -128,7 +129,7 @@ icut({x:length/2});
 rapid({z:h_safe});
 
 //pad 2
-irapid({x:gap+2*r_tool,y:-(gap+2*r_tool)});
+irapid({x:gap+2*r_tool,y:-(gap+r_tool+0.1016)});
  icut({z: -h_safe-depth});
  icut({y:-length});
  icut({y:length/2});
@@ -142,7 +143,7 @@ icut({y:-length/2});
 rapid({z:h_safe});
 
 //pad 3
-irapid({x:-(gap+2*r_tool),y:-(gap+2*r_tool)});
+irapid({x:-(gap+2*r_tool),y:-(gap+r_tool+0.1016)});
  icut({z: -h_safe-depth});
  icut({x:-length});
  icut({x:length/2});
@@ -162,13 +163,13 @@ function tracesp(gap,depth, h_safe,type) {
 //pad 1
 irapid({y:length/2+gap+2*r_tool});
  icut({z: -h_safe-depth});
- icut({y:5});
+ icut({y:3});
 icut({x:20});
 cpad(1.5);
 rapid({z:h_safe});
 
 //pad 2
-irapid({y:-5-length/2-gap-2*r_tool});
+irapid({y:-3-length/2-gap-2*r_tool});
  icut({z: -h_safe-depth});
  cpad(1.5);
  icut({x: -20+length/2+gap+2*r_tool});
@@ -177,7 +178,7 @@ rapid({z:h_safe});
 //pad 3
 irapid({x:-length/2-gap-2*r_tool,y:-length/2-gap-2*r_tool});
  icut({z: -h_safe-depth});
- icut({y:-5});
+ icut({y:-3});
 icut({x:20});
 cpad(1.5);
 rapid({z:h_safe});
@@ -189,7 +190,11 @@ function tracemp(gap,depth, h_safe,type) {
 //pad 1
 irapid({x:-length/2});
  icut({z: -h_safe-depth});
- icut({x:-20});
+ icut({x:-2});
+ icut({y:-8});
+ icut({x:22});
+
+
 cpad(1.5);
 rapid({z:h_safe});
 
@@ -206,7 +211,6 @@ function cpad(length) {
   icut({x: -length});
   icut({y: length});
   icut({x: length/2});
-
   icut({y: -length/2});
   icut({x: length/2});
   icut({x: -length});
