@@ -1,5 +1,8 @@
 #include <Wire.h>
 
+#include <ros.h>
+#include <std_msgs/Float64.h>
+
 //AD7746 definitions
 #define I2C_ADDRESS  0x48 //0x90 shift one to the rigth
 
@@ -31,13 +34,23 @@ byte outOfRangeCount = 0;
 
 unsigned long offset = 0;
 unsigned long offsetting;
+
+ros::NodeHandle nh;
+float x;
+
+std_msgs::Float64  cap_msg;
+
+
+ros::Publisher chatter("chatter", &cap_msg);
+
+
 void setup()
 {
 
   Wire.begin(); // sets up i2c for operation
-  Serial.begin(9600); // set up baud rate for serial
+  Serial.begin(57600); // set up baud rate for serial
 
-  Serial.println("Initializing");
+  //Serial.println("Initializing");
 
   Wire.beginTransmission(I2C_ADDRESS); // start i2c cycle
   Wire.write(RESET_ADDRESS); // reset the device
@@ -50,10 +63,10 @@ void setup()
 
   writeRegister(REGISTER_CAP_SETUP,_BV(7)| _BV(5)); // cap setup reg - cap enabled
 
-  Serial.println("Getting offset");
+  //Serial.println("Getting offset");
   offset = ((unsigned long)readInteger(REGISTER_CAP_OFFSET)) << 8;  
-  Serial.print("Factory offset: ");
-  Serial.println(offset);
+  //Serial.print("Factory offset: ");
+  //Serial.println(offset);
 
   writeRegister(0x0A, _BV(7) | _BV(6) | _BV(5) | _BV(4) | _BV(3) | _BV(2) | _BV(0));  // set configuration to calib. mode, slow sample
 
@@ -61,9 +74,9 @@ void setup()
   delay(10);
 
   displayStatus();
-  Serial.print("Calibrated offset: ");
+  //Serial.print("Calibrated offset: ");
   offset = ((unsigned long)readInteger(REGISTER_CAP_OFFSET)) << 8;  
-  Serial.println(offset);
+  //Serial.println(offset);
 
   writeRegister(REGISTER_CAP_SETUP,_BV(7)| _BV(5)); // cap setup reg - cap enabled
 
@@ -75,7 +88,13 @@ void setup()
   calibrate();
 
 
-  Serial.println("done");
+  //Serial.println("done");
+  
+  //initialization of ROS Publisher
+  nh.getHardware()->setBaud(57600);
+  nh.initNode();
+  nh.advertise(chatter);
+  
 }
 
 void loop() // main program begins
@@ -90,33 +109,36 @@ void loop() // main program begins
   }
 
   long value = readValue();
-  Serial.print(offset);
-  Serial.print("/");
-  Serial.print((int)calibration);
-  Serial.print("/");
-  Serial.println(value);
+  //Serial.print(offset);
+  //Serial.print("/");
+  //Serial.print((int)calibration);
+  //Serial.print("/");
+  //Serial.println(value);
   unsigned long code;
   code = (value-offset) * 2.44e-07-((int)calibration)*0.164;
-  Serial.println(code);
-  if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
-    outOfRangeCount++;
-  }
-  if (outOfRangeCount>MAX_OUT_OF_RANGE_COUNT) {
-    if (value < VALUE_LOWER_BOUND) {
-      calibrate(-CALIBRATION_INCREASE);
-    } 
-    else {
-      calibrate(CALIBRATION_INCREASE);
-    }
-    outOfRangeCount=0;
-  }
-
-  delay(50);
-
+  //Serial.println(code);
+  
+//  if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
+//    outOfRangeCount++;
+//  }
+//  if (outOfRangeCount>MAX_OUT_OF_RANGE_COUNT) {
+//    if (value < VALUE_LOWER_BOUND) {
+//      calibrate(-CALIBRATION_INCREASE);
+//    } 
+//    else {
+//      calibrate(CALIBRATION_INCREASE);
+//    }
+//    outOfRangeCount=0;
+//  }
+  x=code;
+  //ros publisher on capacitance
+  cap_msg.data = x;
+  chatter.publish( &cap_msg );
+  nh.spinOnce();
+  delay(1);
  // byte result =readRegister(REGISTER_CAP_DATA);
  // Serial.println("result");
  // Serial.println(result);
-
 }
 
 void calibrate (byte direction) {
@@ -129,7 +151,7 @@ void calibrate (byte direction) {
 void calibrate() {
   calibration = 0;
 
-  Serial.println("Calibrating CapDAC A");
+  //Serial.println("Calibrating CapDAC A");
 
   long value = readValue();
 
@@ -138,7 +160,7 @@ void calibrate() {
     writeRegister(REGISTER_CAP_DAC_A, _BV(7) | calibration);
     value = readValue();
   }
-  Serial.println("done");
+  //Serial.println("done");
 }
 
 long readValue() {
