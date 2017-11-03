@@ -118,18 +118,18 @@ void loop() // main program begins
   code = (value-offset) * 2.44e-07-((int)calibration)*0.164;
   //Serial.println(code);
   
-//  if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
-//    outOfRangeCount++;
-//  }
-//  if (outOfRangeCount>MAX_OUT_OF_RANGE_COUNT) {
-//    if (value < VALUE_LOWER_BOUND) {
-//      calibrate(-CALIBRATION_INCREASE);
-//    } 
-//    else {
-//      calibrate(CALIBRATION_INCREASE);
-//    }
-//    outOfRangeCount=0;
-//  }
+ if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
+    outOfRangeCount++;
+  }
+  if (outOfRangeCount>MAX_OUT_OF_RANGE_COUNT) {
+    if (value < VALUE_LOWER_BOUND) {
+      calibrate(-CALIBRATION_INCREASE);
+    } 
+    else {
+      calibrate(CALIBRATION_INCREASE);
+    }
+    outOfRangeCount=0;
+  }
   x=code;
   //ros publisher on capacitance
   cap_msg.data = x;

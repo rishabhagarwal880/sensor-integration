@@ -20,11 +20,13 @@ from reflex_msgs.srv import SetTactileThreshold, SetTactileThresholdRequest
 
 
 hand_state = Hand()
-cap = 1046
+cap =1046
 def main():
     ##################################################################################################################
     rospy.init_node('ExampleHandNode')
 
+    # sensor init
+#    initial()
     # Services can automatically call hand calibration
     calibrate_fingers = rospy.ServiceProxy('/reflex_takktile/calibrate_fingers', Empty)
     calibrate_tactile = rospy.ServiceProxy('/reflex_takktile/calibrate_tactile', Empty)
@@ -42,7 +44,6 @@ def main():
 
     # Constantly capture the current hand state
     rospy.Subscriber('/reflex_takktile/hand_state', Hand, hand_state_cb)
-    rospy.Subscriber('chatter', Float64, callback)
 
     ##################################################################################################################
 #    # Calibrate the fingers (make sure hand is opened in zero position)
@@ -52,21 +53,51 @@ def main():
 #
     ##################################################################################################################
     # Demonstration of position control
-    pos_pub.publish(PoseCommand(f1=1.0, f2=1.0, f3=2.8, preshape=1.5))
+    rospy.sleep(2.0)
+    pos_pub.publish(PoseCommand(f1=1.0, f2=1.0, f3=3.0, preshape=0.0))
+    rospy.sleep(5.0)
     
     while not rospy.is_shutdown():
-	check()    
+#check()    
+#def check(): 
+   # posi_pub = rospy.Publisher('/reflex_takktile/command_position', PoseCommand, queue_size=1)
+       # 
+       # #Position control part
+       # rospy.Subscriber('chatter', Float64, callback)
+       # rospy.loginfo(rospy.get_caller_id() + "in the loop %s", cap)
+       # if cap > 10000.0:
+       # 	pos_pub.publish(PoseCommand(f1=1.0, f2=1.0, f3=2.0, preshape=1.5))
+       # 	rospy.sleep(1.0)
+       # else:
+       # 	pos_pub.publish(PoseCommand(f1=1.0, f2=1.0, f3=3.0, preshape=0.0))
+       # 	rospy.sleep(1.0)
+
+	#force control
+         rospy.Subscriber('chatter', Float64, callback)
+         rospy.loginfo(rospy.get_caller_id() + "in the loop %s", cap)
+	 if cap - 100000 > 100000 and cap - 100000 < 200000:
+	 	force_pub.publish(ForceCommand(f3=50.0))
+        	rospy.sleep(5.0)
+	 	force_pub.publish(ForceCommand(f3=0.0))
+        	rospy.sleep(5.0)
+	 elif cap - 100000 > 400000 and cap - 10000 < 1000000:
+		force_pub.publish(ForceCommand(f3=75.0))
+        	rospy.sleep(5.0)
+		force_pub.publish(ForceCommand(f3=0.0))
+        	rospy.sleep(5.0)
+	 elif cap - 100000 > 1000000:
+		force_pub.publish(ForceCommand(f3=100.0))
+        	rospy.sleep(5.0)
+		force_pub.publish(ForceCommand(f3=0.0))
+        	rospy.sleep(5.0)
+	 elif cap - 100000 <= 0:
+        	pos_pub.publish(PoseCommand(f1=1.0, f2=1.0, f3=2.0, preshape=0.0))
+        	rospy.sleep(3.0)
+        	pos_pub.publish(PoseCommand(f1=1.0, f2=1.0, f3=3.0, preshape=0.0))	
+        	rospy.sleep(3.0)
+  
 
 
-def check():
-    
-    posi_pub = rospy.Publisher('/reflex_takktile/command_position', PoseCommand, queue_size=1)
-   
-    rospy.loginfo(rospy.get_caller_id() + "I heard %s", cap)
-    if cap < 10.0:	
-     	posi_pub.publish(PoseCommand(f1=1.0, f2=1.0, f3=2.0, preshape=1.5))
-    else:
- 	posi_pub.publish(PoseCommand(f1=1.0, f2=1.0, f3=2.8, preshape=1.5))
 #    raw_input("== When ready to wiggle fingers with position control, hit [Enter]\n")
 #    for i in range(100):
 #        setpoint = (-cos(i / 15.0) + 1) * 1.75
@@ -154,13 +185,19 @@ def check():
   #  pos_pub.publish(PoseCommand())
   #  disable_tactile_stops()
  
-
+#def initial():
+#    rospy.Subscriber('chatter', Float64, calibratecap)
+#
+#def calibratecap(data): 
+#    rospy.loginfo(rospy.get_caller_id() + "intialize", data.data)
+#    normalcap=data.data
+#
 def hand_state_cb(data):
     global hand_state
     hand_state = data
 
 def callback(data):
-    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    #rospy.loginfo(rospy.get_caller_id() + "capcitance read %s", data.data)
     global cap 
     cap = data.data   
 	
