@@ -130,7 +130,7 @@ void loop() // main program begins
     }
     outOfRangeCount=0;
   }
-  x=code;
+  x=value;
   //ros publisher on capacitance
   cap_msg.data = x;
   chatter.publish( &cap_msg );
