@@ -48,7 +48,7 @@ void setup()
 {
 
   Wire.begin(); // sets up i2c for operation
-  Serial.begin(57600); // set up baud rate for serial
+  Serial.begin(9600); // set up baud rate for serial
 
   //Serial.println("Initializing");
 
@@ -91,7 +91,7 @@ void setup()
   //Serial.println("done");
   
   //initialization of ROS Publisher
-  nh.getHardware()->setBaud(57600);
+  nh.getHardware()->setBaud(9600);
   nh.initNode();
   nh.advertise(chatter);
   
@@ -109,15 +109,15 @@ void loop() // main program begins
   }
 
   long value = readValue();
-  //Serial.print(offset);
-  //Serial.print("/");
-  //Serial.print((int)calibration);
-  //Serial.print("/");
-  //Serial.println(value);
+  Serial.print(offset);
+  Serial.print("/");
+  Serial.print((int)calibration);
+  Serial.print("/");
+  Serial.println(value);
   unsigned long code;
-  code = (value-offset) * 2.44e-07-((int)calibration)*0.164;
-  //Serial.println(code);
-  
+  code = (value-calibration)* 2.44e-07-((int)calibration)*0.164;
+  Serial.println(code);
+ // code = value;
  if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
     outOfRangeCount++;
   }
