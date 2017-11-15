@@ -1,15 +1,7 @@
 #include <Wire.h>
 
-//ROS Libraries
-#include <ros.h>
-#include <std_msgs/Float64.h>
-
 //AD7746 definitions
 #define I2C_ADDRESS  0x48 //0x90 shift one to the rigth
-
-#define WRITE_ADDRESS 0x90
-#define READ_ADDRESS 0x91
-#define RESET_ADDRESS 0xBF
 
 #define REGISTER_STATUS 0x00
 #define REGISTER_CAP_DATA 0x01
@@ -30,20 +22,10 @@
 #define VALUE_LOWER_BOUND 0xFL
 #define MAX_OUT_OF_RANGE_COUNT 3
 #define CALIBRATION_INCREASE 1
-
-//setup parameters
 byte calibration;
 byte outOfRangeCount = 0;
 
 unsigned long offset = 0;
-unsigned long offsetting;
-
-//initialize the ROS node
-ros::NodeHandle nh;
-float x;
-std_msgs::Float64  cap_msg;
-ros::Publisher chatter("chatter", &cap_msg);
-
 
 void setup()
 {
@@ -51,10 +33,10 @@ void setup()
   Wire.begin(); // sets up i2c for operation
   Serial.begin(9600); // set up baud rate for serial
 
-  //Serial.println("Initializing");
+  Serial.println("Initializing");
 
   Wire.beginTransmission(I2C_ADDRESS); // start i2c cycle
-  Wire.write(RESET_ADDRESS); // reset the device
+  Wire.send(RESET_ADDRESS); // reset the device
   Wire.endTransmission(); // ends i2c cycle
 
   //wait a tad for reboot
@@ -62,12 +44,12 @@ void setup()
 
   writeRegister(REGISTER_EXC_SETUP, _BV(3) | _BV(1) | _BV(0)); // EXC source A
 
-  writeRegister(REGISTER_CAP_SETUP,_BV(7)| _BV(5)); // cap setup reg - cap enabled
+  writeRegister(REGISTER_CAP_SETUP,_BV(7)); // cap setup reg - cap enabled
 
-  //Serial.println("Getting offset");
+  Serial.println("Getting offset");
   offset = ((unsigned long)readInteger(REGISTER_CAP_OFFSET)) << 8;  
-  //Serial.print("Factory offset: ");
-  //Serial.println(offset);
+  Serial.print("Factory offset: ");
+  Serial.println(offset);
 
   writeRegister(0x0A, _BV(7) | _BV(6) | _BV(5) | _BV(4) | _BV(3) | _BV(2) | _BV(0));  // set configuration to calib. mode, slow sample
 
@@ -75,11 +57,11 @@ void setup()
   delay(10);
 
   displayStatus();
-  //Serial.print("Calibrated offset: ");
+  Serial.print("Calibrated offset: ");
   offset = ((unsigned long)readInteger(REGISTER_CAP_OFFSET)) << 8;  
-  //Serial.println(offset);
+  Serial.println(offset);
 
-  writeRegister(REGISTER_CAP_SETUP,_BV(7)| _BV(5)); // cap setup reg - cap enabled
+  writeRegister(REGISTER_CAP_SETUP,_BV(7)); // cap setup reg - cap enabled
 
   writeRegister(REGISTER_EXC_SETUP, _BV(3)); // EXC source A
 
@@ -89,13 +71,7 @@ void setup()
   calibrate();
 
 
-  //Serial.println("done");
-  
-  //initialization of ROS Publisher
-  nh.getHardware()->setBaud(9600);
-  nh.initNode();
-  nh.advertise(chatter);
-  
+  Serial.println("done");
 }
 
 void loop() // main program begins
@@ -105,15 +81,17 @@ void loop() // main program begins
   if (Serial.available() > 0) {
     // read the incoming byte:
     Serial.read();
-    displayStatus();  
+    displayStatus();
 
   }
 
   long value = readValue();
-  unsigned long code;
-  code = (value-calibration)* 2.44e-07-((int)calibration)*0.164;
-
- if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
+  Serial.print(offset);
+  Serial.print("/");
+  Serial.print((int)calibration);
+  Serial.print("/");
+  Serial.println(value);
+  if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
     outOfRangeCount++;
   }
   if (outOfRangeCount>MAX_OUT_OF_RANGE_COUNT) {
@@ -125,12 +103,8 @@ void loop() // main program begins
     }
     outOfRangeCount=0;
   }
-  x=value;
-  //ros publisher on capacitance
-  cap_msg.data = x;
-  chatter.publish( &cap_msg );
-  nh.spinOnce();
-  delay(1);
+
+  delay(50);
 }
 
 void calibrate (byte direction) {
@@ -143,6 +117,8 @@ void calibrate (byte direction) {
 void calibrate() {
   calibration = 0;
 
+  Serial.println("Calibrating CapDAC A");
+
   long value = readValue();
 
   while (value>VALUE_UPPER_BOUND && calibration < 128) {
@@ -150,6 +126,7 @@ void calibrate() {
     writeRegister(REGISTER_CAP_DAC_A, _BV(7) | calibration);
     value = readValue();
   }
+  Serial.println("done");
 }
 
 long readValue() {
@@ -157,8 +134,7 @@ long readValue() {
   uint8_t data[3];
 
   char status = 0;
-  //wait until a conversion is done
-  while (!(status & (_BV(0) | _BV(2)))) {
+  while (!(status & _BV(0))) {
     //wait for the next conversion
     status= readRegister(REGISTER_STATUS);
   }
@@ -166,7 +142,8 @@ long readValue() {
   unsigned long value =  readLong(REGISTER_CAP_DATA);
 
   value >>=8;
-  ret =value;
+  //we have read one byte to much, now we have to get rid of it
+  ret =  value;
+
   return ret;
 }
-

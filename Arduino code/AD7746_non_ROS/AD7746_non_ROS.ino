@@ -1,6 +1,5 @@
 #include <Wire.h>
 
-//ROS Libraries
 #include <ros.h>
 #include <std_msgs/Float64.h>
 
@@ -30,8 +29,6 @@
 #define VALUE_LOWER_BOUND 0xFL
 #define MAX_OUT_OF_RANGE_COUNT 3
 #define CALIBRATION_INCREASE 1
-
-//setup parameters
 byte calibration;
 byte outOfRangeCount = 0;
 
@@ -50,9 +47,7 @@ void setup()
 
   Wire.begin(); // sets up i2c for operation
   Serial.begin(9600); // set up baud rate for serial
-
-  //Serial.println("Initializing");
-
+  Serial.println("Initializing");
   Wire.beginTransmission(I2C_ADDRESS); // start i2c cycle
   Wire.write(RESET_ADDRESS); // reset the device
   Wire.endTransmission(); // ends i2c cycle
@@ -64,10 +59,10 @@ void setup()
 
   writeRegister(REGISTER_CAP_SETUP,_BV(7)| _BV(5)); // cap setup reg - cap enabled
 
-  //Serial.println("Getting offset");
+  Serial.println("Getting offset");
   offset = ((unsigned long)readInteger(REGISTER_CAP_OFFSET)) << 8;  
-  //Serial.print("Factory offset: ");
-  //Serial.println(offset);
+  Serial.print("Factory offset: ");
+  Serial.println(offset);
 
   writeRegister(0x0A, _BV(7) | _BV(6) | _BV(5) | _BV(4) | _BV(3) | _BV(2) | _BV(0));  // set configuration to calib. mode, slow sample
 
@@ -75,9 +70,9 @@ void setup()
   delay(10);
 
   displayStatus();
-  //Serial.print("Calibrated offset: ");
+  Serial.print("Calibrated offset: ");
   offset = ((unsigned long)readInteger(REGISTER_CAP_OFFSET)) << 8;  
-  //Serial.println(offset);
+  Serial.println(offset);
 
   writeRegister(REGISTER_CAP_SETUP,_BV(7)| _BV(5)); // cap setup reg - cap enabled
 
@@ -89,7 +84,7 @@ void setup()
   calibrate();
 
 
-  //Serial.println("done");
+  Serial.println("done");
   
   //initialization of ROS Publisher
   nh.getHardware()->setBaud(9600);
@@ -110,9 +105,15 @@ void loop() // main program begins
   }
 
   long value = readValue();
+  Serial.print(offset);
+  Serial.print("/");
+  Serial.print((int)calibration);
+  Serial.print("/");
+  Serial.println(value);
   unsigned long code;
   code = (value-calibration)* 2.44e-07-((int)calibration)*0.164;
-
+  Serial.println(code);
+ // code = value;
  if ((value<VALUE_LOWER_BOUND) or (value>VALUE_UPPER_BOUND)) {
     outOfRangeCount++;
   }
@@ -143,6 +144,8 @@ void calibrate (byte direction) {
 void calibrate() {
   calibration = 0;
 
+  Serial.println("Calibrating CapDAC A");
+
   long value = readValue();
 
   while (value>VALUE_UPPER_BOUND && calibration < 128) {
@@ -150,6 +153,7 @@ void calibrate() {
     writeRegister(REGISTER_CAP_DAC_A, _BV(7) | calibration);
     value = readValue();
   }
+  Serial.println("done");
 }
 
 long readValue() {
